@@ -27,7 +27,7 @@ For detailed information on various API specs, go to the /docs/specs folder.
 # How to Run 
 
 * You would need java and maven installed on your system to run the JAR file
-* To build the project, 
+* To build and run the project, 
 1. Go to /Online-Grocery-Store 
 2. Run mvn clean install
 3. A JAR file with name online-grocery-store-0.0.1-SNAPSHOT.jar will be created in the "target" folder.
