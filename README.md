@@ -34,3 +34,6 @@ For detailed information on various API specs, go to the /docs/specs folder. The
 6. You can access the API's using POSTMAN or DHC.
 7. You can access the database by copy pasting this link in your browser "http://localhost:8080/h2-console". The Username is 'sa' and password is empty 
 
+# Test Flow
+* To easily test the system, there are a list of API's you can copy paste and test the system flow. You can find it in /docs/TEST THE SYSTEM
+
