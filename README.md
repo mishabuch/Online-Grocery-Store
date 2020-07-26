@@ -3,8 +3,6 @@ Online Grocery is an online store where you can buy groceries and have them deli
 
 EER Diagram For the Store is As Follows:
 
-![Online Grocery Store EER](/images/eer.png)
-
 A User is associated with a single Cart.
 A User can have many Orders.
 A Cart can have many "Order-Product" entities.
