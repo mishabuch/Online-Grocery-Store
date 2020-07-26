@@ -24,3 +24,15 @@ For detailed information on various API specs, go to the /docs/specs folder.
 * Hibernate
 * Maven
 
+# How to Run 
+
+* You would need java and maven installed on your system to run the JAR file
+* To build the project, 
+1. Go to /Online-Grocery-Store 
+2. Run mvn clean install
+3. A JAR file with name online-grocery-store-0.0.1-SNAPSHOT.jar will be created in the "target" folder.
+4. Run command "java -jar online-grocery-store-0.0.1-SNAPSHOT.jar"
+5. This will bootup the project and also create the in memory database.
+6. You can access the API's using POSTMAN or DHC.
+7. You can access the database by copy pasting this link in your browser "http://localhost:8080/h2-console". The Username is 'sa' and password is empty 
+
