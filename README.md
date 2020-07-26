@@ -7,3 +7,11 @@ EER Diagram For the Store is As Follows:
 
 ![Online Grocery Store EER](/images/eer.png)
 
+A User is associated with a single Cart.
+A User can have many Orders.
+A Cart can have many "Order-Product" entities.
+Many Products can belong to an order.
+An order is created on Cart checkout.
+
+For detailed information on various API specs, go to the /docs/specs folder.
+
