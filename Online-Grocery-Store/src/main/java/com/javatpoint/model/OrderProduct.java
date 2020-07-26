@@ -44,11 +44,7 @@ public class OrderProduct {
 	
 	@NotNull
 	private int productPrice;
-
-	/*
-	 * @Min(0) private Integer productStock;
-	 */
-
+	
 	@Min(1)
 	private Integer count;
 
@@ -84,13 +80,6 @@ public class OrderProduct {
 		this.productPrice = productPrice;
 	}
 
-	/*
-	 * public Integer getProductStock() { return productStock; }
-	 * 
-	 * public void setProductStock(Integer productStock) { this.productStock =
-	 * productStock; }
-	 */
-
 	public Integer getCount() {
 		return count;
 	}
@@ -119,7 +108,6 @@ public class OrderProduct {
 		this.productId = productInfo.getProductId();
 		this.productName = productInfo.getName();
 		this.productPrice = productInfo.getPrice();
-		//this.productStock = productInfo.getQuantityInInventory();
 		this.count = quantity;
 	}
 	
