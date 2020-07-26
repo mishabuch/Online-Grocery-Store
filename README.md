@@ -5,4 +5,5 @@ Online Grocery is an online store where you can buy groceries and have them deli
 
 EER Diagram For the Store is As Follows:
 
+![Online Grocery Store EER](/images/eer.png)
 
