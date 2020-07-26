@@ -1,6 +1,5 @@
 package com.javapoint.service.test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Assert;
@@ -11,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import com.javapoint.enums.ErrorCodeEnums;
+import com.javapoint.test.utils.TestUtils;
 import com.javatpoint.model.Product;
 import com.javatpoint.repository.ProductRepository;
 import com.javatpoint.service.ProductService;
@@ -28,9 +28,9 @@ public class ProductServiceTest {
 		
 		productService = new ProductService();
 		MockitoAnnotations.initMocks(this);
-		Mockito.doReturn(createProductsList()).when(productRepository).findAll();
-		Mockito.doReturn(createValidProduct()).when(productRepository).findOne(Mockito.anyInt());
-		Mockito.doReturn(createProductsList()).when(productRepository).findByNameContaining(Mockito.anyString());
+		Mockito.doReturn(TestUtils.createProductsList()).when(productRepository).findAll();
+		Mockito.doReturn(TestUtils.createValidProduct()).when(productRepository).findOne(Mockito.anyInt());
+		Mockito.doReturn(TestUtils.createProductsList()).when(productRepository).findByNameContaining(Mockito.anyString());
 		Mockito.doNothing().when(productRepository).delete(Mockito.anyInt());
 	
 	}
@@ -93,16 +93,6 @@ public class ProductServiceTest {
 		}
 	}
 	
-	private Product createValidProduct() {
-		Product product = new Product();
-		product.setMerchant("unilever");
-		product.setName("tea");
-		product.setExpiryDate("2020-10-01");
-		product.setPrice(100);
-		product.setProductId(1);
-		product.setQuantityInInventory(100);
-		return product;
-	}
 	
 	private Product createInValidProduct() {
 		Product product = new Product();
@@ -115,11 +105,6 @@ public class ProductServiceTest {
 		return product;
 	}
 	
-	private Object createProductsList() {
-		List<Product> products = new ArrayList<>();
-		products.add(createValidProduct());
-		return products;
-	}
 
 
 

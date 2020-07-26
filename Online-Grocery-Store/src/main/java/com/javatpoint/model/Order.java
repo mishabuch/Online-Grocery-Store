@@ -65,7 +65,7 @@ public class Order implements Serializable {
 
 	@Column
 	@Min(0)
-	private int totalValue;
+	private float totalValue;
 
 	@Column
 	private String orderDate;
@@ -125,7 +125,7 @@ public class Order implements Serializable {
 		this.deliveryDate = deliveryDate;
 	}
 
-	public int getTotalValue() {
+	public float getTotalValue() {
 		return totalValue;
 	}
 
@@ -191,7 +191,7 @@ public class Order implements Serializable {
 
 	public Order(User user,String orderDate) {
 		Set<OrderProduct> products = user.getCart().getProductsInOrder();
-		int total = 0;
+		float total = 0;
 		for (OrderProduct product : products)
 			total = total + (product.getProductPrice()) * product.getCount();
 		this.totalValue = total;

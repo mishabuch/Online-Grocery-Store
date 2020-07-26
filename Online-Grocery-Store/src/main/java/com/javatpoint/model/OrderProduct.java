@@ -43,7 +43,7 @@ public class OrderProduct {
 	private String productName;
 	
 	@NotNull
-	private int productPrice;
+	private float productPrice;
 	
 	@Min(1)
 	private Integer count;
@@ -72,7 +72,7 @@ public class OrderProduct {
 		this.productName = productName;
 	}
 
-	public int getProductPrice() {
+	public float getProductPrice() {
 		return productPrice;
 	}
 

@@ -25,7 +25,7 @@ public class Product {
 	@Column
 	@NotNull
 	@Min(0)
-	private int price;
+	private float price;
 	
 	@Column
 	@NotNull
@@ -38,6 +38,17 @@ public class Product {
 	@Column
 	private String expiryDate; // Haven't kept it mandatory. Can be mandatory 
 	
+	@Column
+	private String unitOfMeasurement; // Haven't kept it mandatory. Can be mandatory 
+	
+	public String getUnitOfMeasurement() {
+		return unitOfMeasurement;
+	}
+
+	public void setUnitOfMeasurement(String unit_of_measurement) {
+		this.unitOfMeasurement = unit_of_measurement;
+	}
+
 	public String getExpiryDate() {
 		return expiryDate;
 	}
@@ -74,7 +85,7 @@ public class Product {
 		this.name = name;
 	}
 
-	public int getPrice() {
+	public float getPrice() {
 		return price;
 	}
 

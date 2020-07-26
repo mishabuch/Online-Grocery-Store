@@ -1,9 +1,6 @@
 package com.javatpoint.controller.test;
 
 import java.text.ParseException;
-import java.util.HashSet;
-import java.util.Set;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,13 +12,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.javapoint.enums.ErrorCodeEnums;
+import com.javapoint.test.utils.TestUtils;
 import com.javatpoint.controller.CartController;
 import com.javatpoint.model.AddProductToCartInput;
-import com.javatpoint.model.Cart;
-import com.javatpoint.model.Order;
-import com.javatpoint.model.OrderProduct;
 import com.javatpoint.model.Product;
-import com.javatpoint.model.User;
 import com.javatpoint.service.CartService;
 import com.javatpoint.service.OrderProductService;
 import com.javatpoint.service.ProductService;
@@ -53,29 +47,29 @@ public class CartControllerTest {
 		Mockito.doNothing().when(cartService).checkout(Mockito.anyObject());
 		Mockito.doNothing().when(cartService).delete(Mockito.anyInt(), Mockito.anyObject());
 		Mockito.doNothing().when(orderProductService).update(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyObject());
-		Mockito.doReturn(createValidCart()).when(cartService).getCart(Mockito.anyObject());
-		Mockito.doReturn(createValidUser()).when(userService).getUserById(Mockito.anyInt());
-		Mockito.doReturn(createValidProduct()).when(productService).findById(Mockito.anyInt());
+		Mockito.doReturn(TestUtils.createValidCart()).when(cartService).getCart(Mockito.anyObject());
+		Mockito.doReturn(TestUtils.createValidUser()).when(userService).getUserById(Mockito.anyInt());
+		Mockito.doReturn(TestUtils.createValidProduct()).when(productService).findById(Mockito.anyInt());
 	
 	}
 	
 	@Test
 	public void testPositiveAddToCart() throws ParseException {
-		AddProductToCartInput form = getAddProductForm();
+		AddProductToCartInput form = TestUtils.getAddProductForm();
 		ResponseEntity<?> rt = cartController.addToCart(form,"MQ==");
 		Assert.assertEquals(HttpStatus.OK, rt.getStatusCode());
 	}
 	
 	@Test
 	public void testNegativeAddToCartTokenEmpty() throws ParseException {
-		AddProductToCartInput form = getAddProductForm();
+		AddProductToCartInput form = TestUtils.getAddProductForm();
 		ResponseEntity<?> rt = cartController.addToCart(form,"");
 		Assert.assertEquals(HttpStatus.BAD_REQUEST, rt.getStatusCode());
 		Assert.assertEquals(ErrorCodeEnums.TOKEN_NOT_PASSED.getMessage(), rt.getBody().toString());
 	}
 	@Test
 	public void testNegativeAddToCartTokenNull() throws ParseException {
-		AddProductToCartInput form = getAddProductForm();
+		AddProductToCartInput form = TestUtils.getAddProductForm();
 		ResponseEntity<?> rt = cartController.addToCart(form,null);
 		Assert.assertEquals(HttpStatus.BAD_REQUEST, rt.getStatusCode());
 		Assert.assertEquals(ErrorCodeEnums.TOKEN_NOT_PASSED.getMessage(), rt.getBody().toString());
@@ -83,7 +77,7 @@ public class CartControllerTest {
 	
 	@Test
 	public void testNegativeAddToCartUserNull() throws ParseException {
-		AddProductToCartInput form = getAddProductForm();
+		AddProductToCartInput form = TestUtils.getAddProductForm();
 		Mockito.doReturn(null).when(userService).getUserById(Mockito.anyInt());
 		ResponseEntity<?> rt = cartController.addToCart(form,"MQ==");
 		Assert.assertEquals(HttpStatus.BAD_REQUEST, rt.getStatusCode());
@@ -92,8 +86,8 @@ public class CartControllerTest {
 	
 	@Test
 	public void testNegativeAddToCartProductDateInvalid() throws ParseException {
-		AddProductToCartInput form = getAddProductForm();
-		Product product = createValidProduct();
+		AddProductToCartInput form = TestUtils.getAddProductForm();
+		Product product = TestUtils.createValidProduct();
 		product.setExpiryDate("jdakj21");
 		Mockito.doReturn(product).when(productService).findById(Mockito.anyInt());
 		ResponseEntity<?> rt = cartController.addToCart(form,"MQ==");
@@ -103,8 +97,8 @@ public class CartControllerTest {
 	
 	@Test
 	public void testNegativeAddToCartProductExpiryDateInvalid() throws ParseException {
-		AddProductToCartInput form = getAddProductForm();
-		Product product = createValidProduct();
+		AddProductToCartInput form = TestUtils.getAddProductForm();
+		Product product = TestUtils.createValidProduct();
 		product.setExpiryDate("2018-01-01");
 		Mockito.doReturn(product).when(productService).findById(Mockito.anyInt());
 		ResponseEntity<?> rt = cartController.addToCart(form,"MQ==");
@@ -236,53 +230,5 @@ public class CartControllerTest {
 	}
 	
 	
-	private User createValidUser() {
-		User user = new User();
-		user.setUserName("User1");
-		user.setUserId(1);
-		user.setPhone(9663507);
-		user.setPassword("password");
-		user.setIsAdmin(1);
-		user.setEmail("user1@gmail.com");
-		user.setAddress("India");
-		user.setCart(createValidCart());
-		return user;
-
-	}
 	
-	private Product createValidProduct() {
-		Product product = new Product();
-		product.setMerchant("unilever");
-		product.setName("tea");
-		product.setExpiryDate("2020-10-01");
-		product.setPrice(100);
-		product.setProductId(1);
-		product.setQuantityInInventory(100);
-		return product;
-	}
-	
-	private Cart createValidCart() {
-		Cart cart = new Cart();
-		cart.setCartId(1);
-		Set<OrderProduct> productsInOrder = new HashSet<>();
-		OrderProduct op = new OrderProduct();
-		op.setCount(1);
-		op.setId(1);
-		op.setProductId(1);
-		op.setProductName("tea");
-		op.setProductPrice(100);
-		Order order = new Order();
-		order.setOrderId(1);
-		op.setOrder(order);
-		productsInOrder.add(op);
-		cart.setProductsInOrder(productsInOrder);
-		return cart;
-	}
-	
-	private AddProductToCartInput getAddProductForm() {
-		AddProductToCartInput  form = new AddProductToCartInput();
-		form.setProductId(1);
-		form.setQuantity(1);
-		return form;
-	}
 }

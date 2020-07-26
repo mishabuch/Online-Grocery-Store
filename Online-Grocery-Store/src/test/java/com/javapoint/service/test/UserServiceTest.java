@@ -1,6 +1,5 @@
 package com.javapoint.service.test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
@@ -9,6 +8,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+
+import com.javapoint.test.utils.TestUtils;
 import com.javatpoint.model.User;
 import com.javatpoint.repository.UserRepository;
 import com.javatpoint.service.UserService;
@@ -27,9 +28,9 @@ public class UserServiceTest {
 		
 		userService = new UserService();
 		MockitoAnnotations.initMocks(this);
-		Mockito.doReturn(createUsersList()).when(userRepository).findAll();
-		Mockito.doReturn(createValidUser()).when(userRepository).findOne(Mockito.anyInt());
-		Mockito.doReturn(createValidUser()).when(userRepository).findByUserName(Mockito.anyString());
+		Mockito.doReturn(TestUtils.createUsersList()).when(userRepository).findAll();
+		Mockito.doReturn(TestUtils.createValidUser()).when(userRepository).findOne(Mockito.anyInt());
+		Mockito.doReturn(TestUtils.createValidUser()).when(userRepository).findByUserName(Mockito.anyString());
 		Mockito.doNothing().when(userRepository).delete(Mockito.anyInt());
 	
 	}
@@ -55,26 +56,6 @@ public class UserServiceTest {
 	@Test
 	public void testPositiveDeleteUser() {
 		userService.delete(1);
-	}
-
-	private User createValidUser() {
-		User user = new User();
-		user.setUserName("User1");
-		user.setUserId(1);
-		user.setPhone(9663507);
-		user.setPassword("password");
-		user.setIsAdmin(1);
-		user.setEmail("user1@gmail.com");
-		user.setAddress("India");
-		return user;
-
-	}
-	
-
-	private Object createUsersList() {
-		List<User> users = new ArrayList<>();
-		users.add(createValidUser());
-		return users;
 	}
 
 }

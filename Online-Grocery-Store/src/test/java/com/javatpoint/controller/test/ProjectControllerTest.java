@@ -1,9 +1,6 @@
 package com.javatpoint.controller.test;
 
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.javapoint.enums.ErrorCodeEnums;
+import com.javapoint.test.utils.TestUtils;
 import com.javatpoint.controller.ProductController;
 import com.javatpoint.model.Product;
 import com.javatpoint.model.User;
@@ -38,17 +36,17 @@ public class ProjectControllerTest {
 		productController = new ProductController();
 		MockitoAnnotations.initMocks(this);
 		Mockito.doNothing().when(userService).saveOrUpdate(Mockito.anyObject());
-		Mockito.doReturn(createValidProduct()).when(productService).saveProduct(Mockito.anyObject());
-		Mockito.doReturn(createValidProduct()).when(productService).findById(Mockito.anyInt());
-		Mockito.doReturn(createProductsList()).when(productService).findAllProducts();
-		Mockito.doReturn(createProductsList()).when(productService).searchProduct(Mockito.anyString());
+		Mockito.doReturn(TestUtils.createValidProduct()).when(productService).saveProduct(Mockito.anyObject());
+		Mockito.doReturn(TestUtils.createValidProduct()).when(productService).findById(Mockito.anyInt());
+		Mockito.doReturn(TestUtils.createProductsList()).when(productService).findAllProducts();
+		Mockito.doReturn(TestUtils.createProductsList()).when(productService).searchProduct(Mockito.anyString());
 		Mockito.doNothing().when(productService).delete(Mockito.anyInt());
-		Mockito.doReturn(createValidUser()).when(userService).getUserById(Mockito.anyInt());
+		Mockito.doReturn(TestUtils.createValidUser()).when(userService).getUserById(Mockito.anyInt());
 	}
 	
 	@Test
 	public void testPositiveCreateProduct() throws URISyntaxException {
-		Product product = createValidProduct();
+		Product product = TestUtils.createValidProduct();
 		Mockito.doReturn(null).when(productService).findById(Mockito.anyInt());
 		ResponseEntity<?> rt = productController.createProduct(product, "MQ==");
 		Assert.assertEquals(HttpStatus.CREATED, rt.getStatusCode());
@@ -56,7 +54,7 @@ public class ProjectControllerTest {
 	
 	@Test
 	public void testNegativeCreateProductTokenNull() throws URISyntaxException {
-		Product product = createValidProduct();
+		Product product = TestUtils.createValidProduct();
 		Mockito.doReturn(null).when(productService).findById(Mockito.anyInt());
 		ResponseEntity<?> rt = productController.createProduct(product, null);
 		Assert.assertEquals(HttpStatus.BAD_REQUEST, rt.getStatusCode());
@@ -65,7 +63,7 @@ public class ProjectControllerTest {
 	
 	@Test
 	public void testNegativeCreateProductTokenEmpty() throws URISyntaxException {
-		Product product = createValidProduct();
+		Product product = TestUtils.createValidProduct();
 		Mockito.doReturn(null).when(productService).findById(Mockito.anyInt());
 		ResponseEntity<?> rt = productController.createProduct(product, "");
 		Assert.assertEquals(HttpStatus.BAD_REQUEST, rt.getStatusCode());
@@ -75,7 +73,7 @@ public class ProjectControllerTest {
 	
 	@Test
 	public void testNegativeCreateProductUserDOESNOTEXIST() throws URISyntaxException {
-		Product product = createValidProduct();
+		Product product = TestUtils.createValidProduct();
 		Mockito.doReturn(null).when(productService).findById(Mockito.anyInt());
 		Mockito.doReturn(null).when(userService).getUserById(Mockito.anyInt());
 		ResponseEntity<?> rt = productController.createProduct(product, "MQ==");
@@ -85,8 +83,8 @@ public class ProjectControllerTest {
 	
 	@Test
 	public void testNegativeCreateProductUserNotAdmin() throws URISyntaxException {
-		Product product = createValidProduct();
-		User user = createValidUser();
+		Product product = TestUtils.createValidProduct();
+		User user = TestUtils.createValidUser();
 		user.setIsAdmin(0);
 		Mockito.doReturn(null).when(productService).findById(Mockito.anyInt());
 		Mockito.doReturn(user).when(userService).getUserById(Mockito.anyInt());
@@ -97,7 +95,7 @@ public class ProjectControllerTest {
 	
 	@Test
 	public void testNegativeCreateProductAlreadyExist() throws URISyntaxException {
-		Product product = createValidProduct();
+		Product product = TestUtils.createValidProduct();
 		ResponseEntity<?> rt = productController.createProduct(product, "MQ==");
 		Assert.assertEquals(HttpStatus.BAD_REQUEST, rt.getStatusCode());
 		Assert.assertEquals(ErrorCodeEnums.PRODUCT_ALREADY_EXISTS.getMessage(), rt.getBody().toString());
@@ -105,7 +103,7 @@ public class ProjectControllerTest {
 	
 	@Test
 	public void testNegativeCreateProductInvalidExpiry() throws URISyntaxException {
-		Product product = createValidProduct();
+		Product product = TestUtils.createValidProduct();
 		product.setExpiryDate("81982shj");
 		Mockito.doReturn(null).when(productService).findById(Mockito.anyInt());
 		ResponseEntity<?> rt = productController.createProduct(product, "MQ==");
@@ -115,7 +113,7 @@ public class ProjectControllerTest {
 	
 	@Test
 	public void testNegativeCreateProductInvalidExpiryDate() throws URISyntaxException {
-		Product product = createValidProduct();
+		Product product = TestUtils.createValidProduct();
 		product.setExpiryDate("2019-10-10");
 		Mockito.doReturn(null).when(productService).findById(Mockito.anyInt());
 		ResponseEntity<?> rt = productController.createProduct(product, "MQ==");
@@ -146,7 +144,7 @@ public class ProjectControllerTest {
 	
 	@Test
 	public void testSearchProductNegative() throws URISyntaxException {
-		Mockito.doReturn(emptyProductList()).when(productService).searchProduct(Mockito.anyString());
+		Mockito.doReturn(TestUtils.emptyProductList()).when(productService).searchProduct(Mockito.anyString());
 		ResponseEntity<?> rt = productController.searchProducts("ea");
 		Assert.assertEquals(HttpStatus.NOT_FOUND, rt.getStatusCode());
 		Assert.assertEquals(ErrorCodeEnums.NO_RESULTS_FOUND.getMessage(), rt.getBody().toString());
@@ -190,7 +188,7 @@ public class ProjectControllerTest {
 	@Test
 	public void testNegativeDeleteProductUserNotAdmin() throws URISyntaxException {
 		
-		User user = createValidUser();
+		User user = TestUtils.createValidUser();
 		user.setIsAdmin(0);
 		Mockito.doReturn(user).when(userService).getUserById(Mockito.anyInt());
 		ResponseEntity<?> rt = productController.delete(1, "MQ==");
@@ -198,40 +196,7 @@ public class ProjectControllerTest {
 		Assert.assertEquals(ErrorCodeEnums.UNAUTHORIZED_ACCESS.getMessage(), rt.getBody().toString());
 	}
 	
-	private Product createValidProduct() {
-		Product product = new Product();
-		product.setMerchant("unilever");
-		product.setName("tea");
-		product.setExpiryDate("2020-10-01");
-		product.setPrice(100);
-		product.setProductId(1);
-		product.setQuantityInInventory(100);
-		return product;
-	}
 	
-	private Object createProductsList() {
-		List<Product> products = new ArrayList<>();
-		products.add(createValidProduct());
-		return products;
-	}
-	
-	private Object emptyProductList() {
-		List<Product> products = new ArrayList<>();
-		return products;
-	}
-	
-	private User createValidUser() {
-		User user = new User();
-		user.setUserName("User1");
-		user.setUserId(1);
-		user.setPhone(9663507);
-		user.setPassword("password");
-		user.setIsAdmin(1);
-		user.setEmail("user1@gmail.com");
-		user.setAddress("India");
-		return user;
-
-	}
 	
 
 }

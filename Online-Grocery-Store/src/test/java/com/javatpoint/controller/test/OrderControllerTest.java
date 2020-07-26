@@ -1,8 +1,5 @@
 package com.javatpoint.controller.test;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.javapoint.enums.ErrorCodeEnums;
 import com.javapoint.enums.StatusEnum;
+import com.javapoint.test.utils.TestUtils;
 import com.javatpoint.controller.OrderController;
 import com.javatpoint.model.Order;
 import com.javatpoint.model.PaymentForm;
@@ -38,11 +36,11 @@ public class OrderControllerTest {
 		
 		orderController = new OrderController();
 		MockitoAnnotations.initMocks(this);
-		Mockito.doReturn(createValidOrder()).when(orderService).saveUpdate(Mockito.anyObject());
-		Mockito.doReturn(createValidCancelledOrder()).when(orderService).cancelOrder(Mockito.anyInt());
-		Mockito.doReturn(getOrderlist()).when(orderService).findByUserEmail(Mockito.anyString());
-		Mockito.doReturn(createValidOrder()).when(orderService).findByOrderId(Mockito.anyInt());
-		Mockito.doReturn(createValidUser()).when(userService).getUserById(Mockito.anyInt());
+		Mockito.doReturn(TestUtils.createValidOrder()).when(orderService).saveUpdate(Mockito.anyObject());
+		Mockito.doReturn(TestUtils.createValidCancelledOrder()).when(orderService).cancelOrder(Mockito.anyInt());
+		Mockito.doReturn(TestUtils.getOrderlist()).when(orderService).findByUserEmail(Mockito.anyString());
+		Mockito.doReturn(TestUtils.createValidOrder()).when(orderService).findByOrderId(Mockito.anyInt());
+		Mockito.doReturn(TestUtils.createValidUser()).when(userService).getUserById(Mockito.anyInt());
 	}
 	
 	@Test
@@ -111,7 +109,7 @@ public class OrderControllerTest {
 	
 	@Test
 	public void testNegativeGetOrderUserMismatch() {
-		User user = createValidUser();
+		User user = TestUtils.createValidUser();
 		user.setUserId(2);
 		Mockito.doReturn(user).when(userService).getUserById(Mockito.anyInt());
 		ResponseEntity<?> rt = orderController.getOrderDetails(1,"MQ==");
@@ -127,7 +125,7 @@ public class OrderControllerTest {
 	
 	@Test
 	public void testPositiveCancelOrderUserMismatch() {
-		User user = createValidUser();
+		User user = TestUtils.createValidUser();
 		user.setUserId(2);
 		Mockito.doReturn(user).when(userService).getUserById(Mockito.anyInt());
 		ResponseEntity<?> rt = orderController.cancelOrder(1, "MQ==");
@@ -167,15 +165,15 @@ public class OrderControllerTest {
 	
 	@Test
 	public void testPositivePayForOrder() {
-		PaymentForm pf = getPaymentInfo();
+		PaymentForm pf = TestUtils.getPaymentInfo();
 		ResponseEntity<?> rt = orderController.payForOrder(1, "MQ==", pf);
 		Assert.assertEquals(HttpStatus.OK, rt.getStatusCode());
 	}
 	
 	@Test
 	public void testNegativePayForOrderInvalidOrderStatus() {
-		PaymentForm pf = getPaymentInfo();
-		Order order = createValidOrder();
+		PaymentForm pf = TestUtils.getPaymentInfo();
+		Order order = TestUtils.createValidOrder();
 		order.setStatus(StatusEnum.PLACED.getMsg());
 		Mockito.doReturn(order).when(orderService).findByOrderId(Mockito.anyInt());
 		ResponseEntity<?> rt = orderController.payForOrder(1, "MQ==", pf);
@@ -185,8 +183,8 @@ public class OrderControllerTest {
 	
 	@Test
 	public void testNegativePayForOrderUserMismatch() {
-		PaymentForm pf = getPaymentInfo();
-		User user = createValidUser();
+		PaymentForm pf = TestUtils.getPaymentInfo();
+		User user = TestUtils.createValidUser();
 		user.setUserId(2);
 		Mockito.doReturn(user).when(userService).getUserById(Mockito.anyInt());
 		ResponseEntity<?> rt = orderController.payForOrder(1, "MQ==", pf);
@@ -196,7 +194,7 @@ public class OrderControllerTest {
 	
 	@Test
 	public void testNegativePayForOrderUserNull() {
-		PaymentForm pf = getPaymentInfo();
+		PaymentForm pf = TestUtils.getPaymentInfo();
 		Mockito.doReturn(null).when(userService).getUserById(Mockito.anyInt());
 		ResponseEntity<?> rt = orderController.payForOrder(1, "MQ==", pf);
 		Assert.assertEquals(HttpStatus.NOT_FOUND, rt.getStatusCode());
@@ -205,7 +203,7 @@ public class OrderControllerTest {
 	
 	@Test
 	public void testNegativePayForOrderTokenNull() {
-		PaymentForm pf = getPaymentInfo();
+		PaymentForm pf = TestUtils.getPaymentInfo();
 		ResponseEntity<?> rt = orderController.payForOrder(1, null, pf);
 		Assert.assertEquals(HttpStatus.BAD_REQUEST, rt.getStatusCode());
 		Assert.assertEquals(ErrorCodeEnums.TOKEN_NOT_PASSED.getMessage(), rt.getBody().toString());
@@ -213,7 +211,7 @@ public class OrderControllerTest {
 
 	@Test
 	public void testNegativePayForOrderTokenEmpty() {
-		PaymentForm pf = getPaymentInfo();
+		PaymentForm pf = TestUtils.getPaymentInfo();
 		ResponseEntity<?> rt = orderController.payForOrder(1, "", pf);
 		Assert.assertEquals(HttpStatus.BAD_REQUEST, rt.getStatusCode());
 		Assert.assertEquals(ErrorCodeEnums.TOKEN_NOT_PASSED.getMessage(), rt.getBody().toString());
@@ -221,7 +219,7 @@ public class OrderControllerTest {
 	
 	@Test
 	public void testNegativePayForOrderDetailOrderNotExist() {
-		PaymentForm pf = getPaymentInfo();
+		PaymentForm pf = TestUtils.getPaymentInfo();
 		Mockito.doReturn(null).when(orderService).findByOrderId(Mockito.anyInt());
 		ResponseEntity<?> rt = orderController.payForOrder(1,"MQ==",pf);
 		Assert.assertEquals(HttpStatus.NOT_FOUND, rt.getStatusCode());
@@ -230,7 +228,7 @@ public class OrderControllerTest {
 	
 	@Test
 	public void testNegativePayForOrderDetailDelivertDateInvalid() {
-		PaymentForm pf = getPaymentInfo();
+		PaymentForm pf = TestUtils.getPaymentInfo();
 		pf.setDeliveryDate("112weewe");
 		ResponseEntity<?> rt = orderController.payForOrder(1,"MQ==",pf);
 		Assert.assertEquals(HttpStatus.BAD_REQUEST, rt.getStatusCode());
@@ -239,74 +237,12 @@ public class OrderControllerTest {
 	
 	@Test
 	public void testNegativePayForOrderDetailDelivertBeforOrderDate() {
-		PaymentForm pf = getPaymentInfo();
+		PaymentForm pf = TestUtils.getPaymentInfo();
 		pf.setDeliveryDate("2018-10-10");
 		ResponseEntity<?> rt = orderController.payForOrder(1,"MQ==",pf);
 		Assert.assertEquals(HttpStatus.BAD_REQUEST, rt.getStatusCode());
 		Assert.assertEquals(ErrorCodeEnums.INVALID_DELIVERY_DATE.getMessage(), rt.getBody().toString());
 	}
 
-	private PaymentForm getPaymentInfo() {
-		PaymentForm pf = new PaymentForm();
-		pf.setDeliveryDate("2021-10-10");
-		pf.setPaymentMethod("card");
-		pf.setPaymentDate("2020-07-26");
-		pf.setCardNumber("943987");
-		return pf;
-	}
-	
-	private User createValidUser() {
-		User user = new User();
-		user.setUserName("User1");
-		user.setUserId(1);
-		user.setPhone(9663507);
-		user.setPassword("password");
-		user.setIsAdmin(1);
-		user.setEmail("user1@gmail.com");
-		user.setAddress("India");
-		return user;
 
-	}
-	
-	private Order createValidOrder() {
-		Order order = new Order();
-		order.setAddress("India");
-		order.setCardNumber("123");
-		order.setDeliveryDate("2020-11-01");
-		order.setEmail("abc@gamil.com");
-		order.setOrderDate("2020-10-09");
-		order.setOrderId(1);
-		order.setPaymentDate("2020-10-10");
-		order.setPhone(9888);
-		order.setStatus(StatusEnum.CREATED.getMsg());
-		order.setTotalValue(100);
-		order.setTransactionID(11133);
-		order.setUserId(1);
-		return order;
-	}
-	
-
-	private ResponseEntity<Order> createValidCancelledOrder() {
-		Order order = new Order();
-		order.setAddress("India");
-		order.setCardNumber("123");
-		order.setDeliveryDate("2020-11-01");
-		order.setEmail("abc@gamil.com");
-		order.setOrderDate("2020-10-09");
-		order.setOrderId(1);
-		order.setPaymentDate("2020-10-10");
-		order.setPhone(9888);
-		order.setStatus(StatusEnum.CANCELED.getMsg());
-		order.setTotalValue(100);
-		order.setTransactionID(11133);
-		order.setUserId(1);
-		return ResponseEntity.status(HttpStatus.OK).body(order);
-	}
-
-	private List<Order> getOrderlist(){
-		List<Order> orderList = new ArrayList<Order>();
-		orderList.add(createValidOrder());
-		return orderList;
-		
-	}
 }

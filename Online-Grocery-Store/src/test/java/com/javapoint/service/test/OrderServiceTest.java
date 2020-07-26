@@ -10,13 +10,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-
 import com.javapoint.enums.ErrorCodeEnums;
 import com.javapoint.enums.StatusEnum;
+import com.javapoint.test.utils.TestUtils;
 import com.javatpoint.model.Order;
-import com.javatpoint.model.Product;
 import com.javatpoint.repository.OrderRepository;
 import com.javatpoint.service.OrderService;
 import com.javatpoint.service.ProductService;
@@ -41,14 +38,14 @@ public class OrderServiceTest {
 		Mockito.doReturn(createOrdersList()).when(orderRepository).findAllByStatusAndEmail(Mockito.anyString(),
 				Mockito.anyString());
 		Mockito.doReturn(createOrdersList()).when(orderRepository).findAllByEmail(Mockito.anyString());
-		Mockito.doReturn(createValidProduct()).when(productService).findById(Mockito.anyInt());
+		Mockito.doReturn(TestUtils.createValidProduct()).when(productService).findById(Mockito.anyInt());
 		Mockito.doNothing().when(productService).addStock(Mockito.anyInt(), Mockito.anyInt());
 	}
 
 	@Test
 	public void testPositiveGetOrder() {
 		Order order = orderService.findByOrderId(1);
-		Assert.assertEquals(order.getTotalValue(), 100);
+		Assert.assertEquals(order.getTotalValue(), 100,0);
 	}
 
 	@Test
@@ -92,16 +89,6 @@ public class OrderServiceTest {
 		return order;
 	}
 
-	private Product createValidProduct() {
-		Product product = new Product();
-		product.setMerchant("unilever");
-		product.setName("tea");
-		product.setExpiryDate("2020-10-01");
-		product.setPrice(100);
-		product.setProductId(1);
-		product.setQuantityInInventory(100);
-		return product;
-	}
 
 	private Object createOrdersList() {
 		List<Order> orders = new ArrayList<>();
