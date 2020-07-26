@@ -11,7 +11,7 @@ A Cart can have many "Order-Product" entities.
 Many Products can belong to an order.
 An order is created on Cart checkout.
 
-For detailed information on various API specs, go to the /docs/specs folder.
+For detailed information on various API specs, go to the /docs/specs folder. The API's can be accessed at http://localhost:8080/
 
 # Technologies Used
 
