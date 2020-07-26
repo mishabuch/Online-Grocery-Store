@@ -10,7 +10,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
+import com.javapoint.enums.ErrorCodeEnums;
 import com.javapoint.enums.StatusEnum;
 import com.javatpoint.model.Order;
 import com.javatpoint.model.Product;
@@ -58,6 +61,18 @@ public class OrderServiceTest {
 	public void testPositiveGetOrderByNameEmail() {
 		List<Order> order = orderService.findByUserEmail("abc@gamil.com");
 		Assert.assertEquals(order.size(), 1);
+	}
+	
+	@Test
+	public void testNegativeOrderNotPlaced() {
+		Order order = createValidOrder();
+		order.setStatus(StatusEnum.CREATED.getMsg());
+		Mockito.doReturn(createValidOrder()).when(orderRepository).findOne(Mockito.anyInt());
+		 try {
+			orderService.cancelOrder(1);
+		} catch (Exception e) {
+			Assert.assertEquals(ErrorCodeEnums.ORDER_NOT_PAID_FOR, e.getMessage());
+		}
 	}
 
 	private Order createValidOrder() {

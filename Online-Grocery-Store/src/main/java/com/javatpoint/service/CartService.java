@@ -73,7 +73,7 @@ public class CartService {
 
 	}
 
-	// Delete an iteam from the cart
+	// Delete an items from the cart
 	@Transactional
 	public void delete(int itemId, User user) {
 		Optional<OrderProduct> op = user.getCart().getProductsInOrder().stream().filter(e -> itemId == e.getProductId())
