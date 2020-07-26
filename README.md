@@ -15,3 +15,12 @@ An order is created on Cart checkout.
 
 For detailed information on various API specs, go to the /docs/specs folder.
 
+# Technologies Used
+
+Java 
+Spring Boot 2.2
+H2 Database
+Spring Data JPA
+Hibernate
+Maven
+
